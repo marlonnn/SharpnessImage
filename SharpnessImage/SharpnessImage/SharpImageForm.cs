@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,6 +14,15 @@ namespace SharpnessImage
 {
     public partial class SharpImageForm : Form
     {
+        [DllImport("SharpnessImageLib.dll", EntryPoint = "Tenengrad")]
+        extern static double Tenengrad(string fileName);
+
+        [DllImport("SharpnessImageLib.dll", EntryPoint = "Laplacian")]
+        extern static double Laplacian(string fileName);
+
+        [DllImport("SharpnessImageLib.dll", EntryPoint = "Variance")]
+        extern static double Variance(string fileName);
+
         private List<Frame> frames;
         private int currentIndex;
         private bool play;
@@ -108,12 +118,19 @@ namespace SharpnessImage
         {
             if (this.frames != null && this.frames.Count > 0)
             {
-                this.pictureBox.ImageLocation = frames[currentIndex].FileFullName;
-                UpdateProgressBar(currentIndex);
-                currentIndex++;
-                if (currentIndex == frames.Count)
+                try
                 {
-                    StopPlay();
+                    this.pictureBox.ImageLocation = frames[currentIndex].FileFullName;
+                    double d = Tenengrad(frames[currentIndex].FileFullName);
+                    UpdateProgressBar(currentIndex);
+                    currentIndex++;
+                    if (currentIndex == frames.Count)
+                    {
+                        StopPlay();
+                    }
+                }
+                catch (Exception ee)
+                {
                 }
             }
         }
