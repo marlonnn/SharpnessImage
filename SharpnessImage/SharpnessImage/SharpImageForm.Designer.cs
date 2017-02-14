@@ -28,14 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SharpImageForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.timer = new System.Windows.Forms.Timer(this.components);
-            this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.pictureBox = new System.Windows.Forms.PictureBox();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.lblTime = new System.Windows.Forms.Label();
+            this.linkLblName = new System.Windows.Forms.LinkLabel();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
@@ -47,31 +47,9 @@
             this.startToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(491, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(748, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
-            // 
-            // timer
-            // 
-            this.timer.Interval = 200;
-            this.timer.Tick += new System.EventHandler(this.Timer_Tick);
-            // 
-            // progressBar
-            // 
-            this.progressBar.Location = new System.Drawing.Point(151, 7);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(328, 10);
-            this.progressBar.TabIndex = 1;
-            // 
-            // pictureBox
-            // 
-            this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox.Location = new System.Drawing.Point(12, 27);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(467, 485);
-            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox.TabIndex = 2;
-            this.pictureBox.TabStop = false;
             // 
             // openToolStripMenuItem
             // 
@@ -89,11 +67,48 @@
             this.startToolStripMenuItem.Text = "Start";
             this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
+            // progressBar
+            // 
+            this.progressBar.Location = new System.Drawing.Point(151, 7);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(402, 10);
+            this.progressBar.TabIndex = 1;
+            // 
+            // pictureBox
+            // 
+            this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox.Location = new System.Drawing.Point(0, 24);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(748, 764);
+            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox.TabIndex = 2;
+            this.pictureBox.TabStop = false;
+            // 
+            // lblTime
+            // 
+            this.lblTime.AutoSize = true;
+            this.lblTime.Location = new System.Drawing.Point(559, 4);
+            this.lblTime.Name = "lblTime";
+            this.lblTime.Size = new System.Drawing.Size(53, 13);
+            this.lblTime.TabIndex = 3;
+            this.lblTime.Text = "Total:0ms";
+            // 
+            // linkLblName
+            // 
+            this.linkLblName.Location = new System.Drawing.Point(631, 4);
+            this.linkLblName.Name = "linkLblName";
+            this.linkLblName.Size = new System.Drawing.Size(117, 13);
+            this.linkLblName.TabIndex = 4;
+            this.linkLblName.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLblName_LinkClicked);
+            // 
             // SharpImageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(491, 524);
+            this.ClientSize = new System.Drawing.Size(748, 788);
+            this.Controls.Add(this.linkLblName);
+            this.Controls.Add(this.lblTime);
             this.Controls.Add(this.pictureBox);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.menuStrip1);
@@ -114,9 +129,10 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startToolStripMenuItem;
-        private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.PictureBox pictureBox;
+        private System.Windows.Forms.Label lblTime;
+        private System.Windows.Forms.LinkLabel linkLblName;
     }
 }
 

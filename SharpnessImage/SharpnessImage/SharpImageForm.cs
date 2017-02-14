@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,25 +15,24 @@ namespace SharpnessImage
 {
     public partial class SharpImageForm : Form
     {
-        [DllImport("SharpnessImageLib.dll", EntryPoint = "Tenengrad")]
-        extern static double Tenengrad(string fileName);
-
-        [DllImport("SharpnessImageLib.dll", EntryPoint = "Laplacian")]
-        extern static double Laplacian(string fileName);
-
-        [DllImport("SharpnessImageLib.dll", EntryPoint = "Variance")]
-        extern static double Variance(string fileName);
-
         private List<Frame> frames;
-        private int currentIndex;
         private bool play;
+        private List<SharpnessImage> sharpnessImages;
+        private SharpnessImage finaleIamge;
+
         public SharpImageForm()
         {
             InitializeComponent();
             frames = new List<Frame>();
+            sharpnessImages = new List<SharpnessImage>();
             this.startToolStripMenuItem.Enabled = false;
         }
 
+        /// <summary>
+        /// 打开文件夹
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (FolderBrowserDialog ofd = new FolderBrowserDialog())
@@ -81,22 +81,8 @@ namespace SharpnessImage
 
         private void PlayFrames(bool start)
         {
-            this.startToolStripMenuItem.Image = start ?
-                Properties.Resources.pause : Properties.Resources.Run;
-            this.startToolStripMenuItem.Text = !start ? "Start" : "Pause";
-            this.timer.Enabled = start;
-            this.openToolStripMenuItem.Enabled = !start;
-        }
-
-        /// <summary>
-        /// 停止播放
-        /// </summary>
-        private void StopPlay()
-        {
-            this.timer.Enabled = false;
-            this.currentIndex = 0;
-            this.startToolStripMenuItem.Enabled = false;
-            this.openToolStripMenuItem.Enabled = true;
+            Thread thread = new Thread(CalculateSharpnessImage);
+            thread.Start();
         }
 
         /// <summary>
@@ -105,34 +91,95 @@ namespace SharpnessImage
         /// <param name="value"></param>
         private void UpdateProgressBar(int value)
         {
-
-            this.progressBar.Value = value;
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action<int>(UpdateProgressBar), value);
+            }
+            else
+            {
+                this.progressBar.Value = value;
+            }
         }
 
-        private double CalculateSharpnessImage(Frame frame)
+        /// <summary>
+        /// 显示最终的焦点图片
+        /// </summary>
+        /// <param name="fileName"></param>
+        private void ShowSharpnessImage(string fileName)
         {
-            return 0.0d;
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action<string>(ShowSharpnessImage), fileName);
+            }
+            else
+            {
+                this.pictureBox.ImageLocation = fileName;
+                this.linkLblName.Text = Path.GetFileName(fileName);
+            }
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        /// <summary>
+        /// 计算耗时 ms
+        /// </summary>
+        /// <param name="milliseconds"></param>
+        private void TotalTime(long milliseconds)
         {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action<long>(TotalTime), milliseconds);
+            }
+            else
+            {
+                this.lblTime.Text = string.Format("Total:{0}ms", milliseconds);
+            }
+        }
+
+        /// <summary>
+        /// 计算焦点图片
+        /// </summary>
+        private void CalculateSharpnessImage()
+        {
+            sharpnessImages = new List<SharpnessImage>();
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            System.Diagnostics.Stopwatch sw1 = new System.Diagnostics.Stopwatch();
+            sw.Start();
             if (this.frames != null && this.frames.Count > 0)
             {
-                try
+                for (int i=0; i<frames.Count; i++)
                 {
-                    this.pictureBox.ImageLocation = frames[currentIndex].FileFullName;
-                    double d = Tenengrad(frames[currentIndex].FileFullName);
-                    UpdateProgressBar(currentIndex);
-                    currentIndex++;
-                    if (currentIndex == frames.Count)
+                    try
                     {
-                        StopPlay();
+                        sw1.Start();
+                        double sharpnessValue = SharpnessAlgorithm.Laplacian(frames[i].FileFullName);
+                        System.Diagnostics.Trace.WriteLine("Laplacian : " + sw1.ElapsedMilliseconds);
+                        sw1.Reset();
+                        var sharpnessImage = new SharpnessImage(frames[i].FileFullName, sharpnessValue);
+                        sharpnessImages.Add(sharpnessImage);
+                        UpdateProgressBar(i);
+                    }
+                    catch (Exception ee)
+                    {
                     }
                 }
-                catch (Exception ee)
-                {
-                }
             }
+
+            System.Diagnostics.Trace.WriteLine("Calculate sharpness image : " + sw.ElapsedMilliseconds);
+            TotalTime(sw.ElapsedMilliseconds);
+            sw1.Stop();
+            sw.Stop();
+            var maxValue = sharpnessImages.Select(sharpnessImage => sharpnessImage.SharpnessValue).Max();
+            finaleIamge = sharpnessImages.Find(sharpnessImage => sharpnessImage.SharpnessValue == maxValue);
+            ShowSharpnessImage(finaleIamge.FileFullName);
+        }
+
+        /// <summary>
+        /// 打开最终焦点图片
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void linkLblName_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(finaleIamge.FileFullName);
         }
     }
 }
