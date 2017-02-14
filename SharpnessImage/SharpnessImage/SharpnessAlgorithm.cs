@@ -52,31 +52,5 @@ namespace SharpnessImage
             MCvScalar scalar = CvInvoke.Mean(imageSobel);
             return scalar.ToArray()[0];
         }
-
-        /// <summary>
-        /// 方差是概率论中用来考察一组离散数据和其期望（即数据的均值）之间的离散（偏离）成都的度量方法。
-        /// 方差较大，表示这一组数据之间的偏差就较大，组内的数据有的较大，有的较小，分布不均衡；
-        /// 方差较小，表示这一组数据之间的偏差较小，组内的数据之间分布平均，大小相近。
-        /// 对焦清晰的图像相比对焦模糊的图像，它的数据之间的灰度差异应该更大，即它的方差应该较大，可以通过图像灰度数据的方差来衡量图像的清晰度，方差越大，表示清晰度越好。
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        //public static double Variance(string fileName)
-        //{
-        //    Mat imageSource = CvInvoke.Imread(fileName, Emgu.CV.CvEnum.LoadImageType.Color);
-
-        //    Mat imageGrey = new Mat();
-        //    CvInvoke.CvtColor(imageSource, imageGrey, Emgu.CV.CvEnum.ColorConversion.Rgb2Gray);
-
-        //    Mat meanValueImage = new Mat();
-        //    Mat meanStdValueImage = new Mat();
-        //    //求灰度图像的标准差  
-        //    CvInvoke.MeanStdDev(imageGrey, meanValueImage, meanStdValueImage);
-        //    double meanValue = 0.0;
-        //    meanValue = CvInvoke.mea.at<double>(0, 0);
-
-        //    //图像的平均灰度
-        //    return scalar.ToArray()[0];
-        //}
     }
 }

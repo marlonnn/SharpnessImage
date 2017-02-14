@@ -150,8 +150,8 @@ namespace SharpnessImage
                     try
                     {
                         sw1.Start();
-                        double sharpnessValue = SharpnessAlgorithm.Laplacian(frames[i].FileFullName);
-                        System.Diagnostics.Trace.WriteLine("Laplacian : " + sw1.ElapsedMilliseconds);
+                        double sharpnessValue = SharpnessAlgorithm.Tenengrad(frames[i].FileFullName);
+                        System.Diagnostics.Trace.WriteLine("Tenengrad : " + sw1.ElapsedMilliseconds);
                         sw1.Reset();
                         var sharpnessImage = new SharpnessImage(frames[i].FileFullName, sharpnessValue);
                         sharpnessImages.Add(sharpnessImage);
