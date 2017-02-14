@@ -94,6 +94,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Laplacian.txt" />
     <Content Include="Lib\SharpnessImageLib.dll" />
     <Content Include="Lib\SharpnessImageLib.pdb" />
     <Content Include="Resources\logo.ico">
@@ -105,6 +106,7 @@
     <Content Include="Resources\pause.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Tenengrad.txt" />
     <None Include="Resources\Run.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
